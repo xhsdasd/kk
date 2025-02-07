@@ -59,6 +59,14 @@ function updateCartDisplay() {
     });
 
     totalAmount.textContent = `¥${total.toFixed(2)}`;
+
+    // 更新悬浮购物车按钮的数量
+    const cartCount = document.querySelector('.float-cart-btn .cart-count');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
+    
+    // 如果购物车为空，隐藏数量标签
+    cartCount.style.display = totalItems > 0 ? 'block' : 'none';
 }
 
 // 更新商品数量
@@ -298,6 +306,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 addToCart(product);
             }
         }
+    });
+
+    // 添加悬浮购物车按钮点击事件
+    document.getElementById('floatCartBtn').addEventListener('click', () => {
+        // 切换到购物车标签
+        const cartTab = document.querySelector('[data-tab="cart"]');
+        cartTab.click();
+        
+        // 平滑滚动到顶部
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 });
 
