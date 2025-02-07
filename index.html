@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手工艺品展示</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>kk妹手作</h1>
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="gallery">作品展示</button>
+            <button class="tab-btn" data-tab="cart">购物车</button>
+            <button class="tab-btn" data-tab="about">关于我们</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="gallery" class="tab-content active">
+            <h2>作品展示</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.pexels.com/photos/4553192/pexels-photo-4553192.jpeg" alt="手工编织包">
+                    <h3>手工编织包</h3>
+                    <p class="price">¥299</p>
+                    <p class="description">精美手工编织包，采用优质棉线制作，典雅大方</p>
+                    <button class="add-to-cart">加入购物车</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://images.pexels.com/photos/6707628/pexels-photo-6707628.jpeg" alt="手工陶瓷杯">
+                    <h3>手工陶瓷杯</h3>
+                    <p class="price">¥159</p>
+                    <p class="description">手工制作陶瓷杯，每件都是独特的艺术品</p>
+                    <button class="add-to-cart">加入购物车</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://images.pexels.com/photos/5913089/pexels-photo-5913089.jpeg" alt="手工毛线帽">
+                    <h3>手工毛线帽</h3>
+                    <p class="price">¥128</p>
+                    <p class="description">温暖舒适的手工编织毛线帽，多色可选</p>
+                    <button class="add-to-cart">加入购物车</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://images.pexels.com/photos/6438660/pexels-photo-6438660.jpeg" alt="手工皮具钱包">
+                    <h3>手工皮具钱包</h3>
+                    <p class="price">¥399</p>
+                    <p class="description">真皮手工制作，精致车缝，耐用典雅</p>
+                    <button class="add-to-cart">加入购物车</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="cart" class="tab-content">
+            <h2>购物车</h2>
+            <div class="cart-items">
+                <!-- 购物车内容将通过 JavaScript 动态生成 -->
+            </div>
+            <div class="cart-summary">
+                <p>总计: <span id="total-amount">¥0</span></p>
+                <button id="print-order">打印订单</button>
+            </div>
+        </section>
+
+        <section id="about" class="tab-content">
+            <h2>关于我们</h2>
+            <p>这里是关于我们的介绍内容...</p>
+        </section>
+    </main>
+
+    <!-- 添加订单模态框 -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content receipt">
+            <span class="close-btn">&times;</span>
+            <div class="receipt-header">
+                <h3>购物小票</h3>
+                <p class="receipt-date"></p>
+            </div>
+            <div class="receipt-body">
+                <!-- 订单内容将通过 JavaScript 动态生成 -->
+            </div>
+            <div class="receipt-footer">
+                <button id="printReceiptBtn">复制订单</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 kk妹手作. 保留所有权利</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
