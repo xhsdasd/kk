@@ -177,21 +177,127 @@ document.getElementById('printReceiptBtn').addEventListener('click', () => {
     });
 });
 
-// 为所有加入购物车按钮添加点击事件
-document.addEventListener('DOMContentLoaded', () => {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
-    
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productCard = this.closest('.product-card');
-            const product = {
-                name: productCard.querySelector('h3').textContent,
-                price: parseFloat(productCard.querySelector('.price').textContent.replace('¥', '')),
-                description: productCard.querySelector('.description').textContent
-            };
-            
-            addToCart(product);
+// 添加产品加载函数
+function loadProducts() {
+    const productsGrid = document.querySelector('.products-grid');
+    productsGrid.innerHTML = ''; // 清空现有内容
+
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p class="price">¥${product.price}</p>
+            <p class="description">${product.description}</p>
+            <button class="add-to-cart" data-product-id="${product.id}">加入购物车</button>
+        `;
+        productsGrid.appendChild(productCard);
+    });
+}
+
+// 修改分类按钮生成函数
+function loadCategories() {
+    const categoryTabs = document.querySelector('.category-tabs');
+    categoryTabs.innerHTML = categories.map(category => `
+        <button class="category-btn ${category.id === 'all' ? 'active' : ''}" 
+                data-category="${category.id}">
+            ${category.icon} ${category.name}
+        </button>
+    `).join('');
+
+    // 添加分类切换事件
+    categoryTabs.addEventListener('click', (e) => {
+        if (e.target.classList.contains('category-btn')) {
+            // 更新按钮状态
+            document.querySelectorAll('.category-btn').forEach(btn => 
+                btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            // 过滤并显示产品
+            const selectedCategory = e.target.dataset.category;
+            filterProducts(selectedCategory);
+        }
+    });
+}
+
+// 过滤产品显示
+function filterProducts(category) {
+    const productsGrid = document.querySelector('.products-grid');
+    productsGrid.style.opacity = '0';
+
+    setTimeout(() => {
+        const filteredProducts = category === 'all' 
+            ? products 
+            : products.filter(product => mapCategoryToId(product.category) === category);
+
+        productsGrid.innerHTML = '';
+        filteredProducts.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p class="price">¥${product.price}</p>
+                <p class="description">${product.description}</p>
+                <button class="add-to-cart" data-product-id="${product.id}">加入购物车</button>
+            `;
+            productsGrid.appendChild(productCard);
         });
+        productsGrid.style.opacity = '1';
+    }, 300);
+}
+
+// 分类映射函数
+function mapCategoryToId(category) {
+    const categoryMap = {
+        "配饰": "accessories",
+        "家居": "home",
+        "服饰": "clothing",
+        "礼品": "gift"
+    };
+    return categoryMap[category] || "other";
+}
+
+// 修改 DOMContentLoaded 事件处理
+document.addEventListener('DOMContentLoaded', () => {
+    loadCategories(); // 加载分类按钮
+    loadProducts();   // 加载所有产品
+
+    // Tab 切换功能
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    function switchTab(tabId) {
+        // 移除所有活动状态
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // 添加新的活动状态
+        const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
+        const activeContent = document.getElementById(tabId);
+        
+        activeButton.classList.add('active');
+        activeContent.classList.add('active');
+    }
+
+    // 添加点击事件监听
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+
+    // 为动态生成的加入购物车按钮添加事件监听
+    document.querySelector('.products-grid').addEventListener('click', (event) => {
+        if (event.target.classList.contains('add-to-cart')) {
+            const productId = parseInt(event.target.getAttribute('data-product-id'));
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                addToCart(product);
+            }
+        }
     });
 });
 
@@ -219,31 +325,4 @@ const cartStyles = `
 // 添加样式到页面
 const styleSheet = document.createElement("style");
 styleSheet.textContent = cartStyles;
-document.head.appendChild(styleSheet);
-
-// Tab 切换功能
-document.addEventListener('DOMContentLoaded', () => {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    function switchTab(tabId) {
-        // 移除所有活动状态
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        // 添加新的活动状态
-        const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
-        const activeContent = document.getElementById(tabId);
-        
-        activeButton.classList.add('active');
-        activeContent.classList.add('active');
-    }
-
-    // 添加点击事件监听
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const tabId = button.getAttribute('data-tab');
-            switchTab(tabId);
-        });
-    });
-}); 
+document.head.appendChild(styleSheet); 
